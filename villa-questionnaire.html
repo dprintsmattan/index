@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שאלון אפיון · אתר תדמית לחברת בנייה ושיפוצים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F5F0;
+    --paper-2:#FDFCF9;
+    --ink:#23201B;
+    --stone:#6B655A;
+    --stone-2:#8C877C;
+    --bronze:#9A7B4F;
+    --bronze-deep:#7C6039;
+    --line:#DED9CE;
+    --line-2:#ECE8DF;
+    --slate:#2E3A34;
+    --shadow:rgba(35,32,27,.08);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  html{scroll-behavior:smooth}
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Assistant',sans-serif;
+    font-weight:400;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    padding:0 20px 80px;
+  }
+
+  .wrap{max-width:880px;margin:0 auto}
+
+  /* ---- mono utility label ---- */
+  .mono{font-family:'IBM Plex Mono',monospace;letter-spacing:.04em}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--bronze-deep);
+    font-weight:500;
+  }
+
+  /* ============ TITLE BLOCK ============ */
+  .titleblock{
+    border:1.5px solid var(--ink);
+    margin-top:34px;
+    background:var(--paper-2);
+    display:grid;
+    grid-template-columns:1.3fr 1fr 1fr;
+  }
+  .tb-cell{
+    padding:12px 16px;
+    border-inline-start:1px solid var(--line);
+  }
+  .tb-cell:first-child{border-inline-start:none}
+  .tb-k{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.62rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--stone-2);
+    display:block;
+    margin-bottom:3px;
+  }
+  .tb-v{font-weight:600;font-size:.95rem;color:var(--ink)}
+
+  /* ============ HERO ============ */
+  .hero{
+    position:relative;
+    border:1.5px solid var(--ink);
+    border-top:none;
+    padding:64px 44px 56px;
+    overflow:hidden;
+    background:
+      linear-gradient(var(--line-2) 1px,transparent 1px) 0 0/100% 34px,
+      linear-gradient(90deg,var(--line-2) 1px,transparent 1px) 0 0/34px 100%,
+      var(--paper-2);
+  }
+  .hero::before{
+    content:"";
+    position:absolute;inset:0;
+    background:radial-gradient(ellipse at 78% 12%, rgba(154,123,79,.10), transparent 55%);
+    pointer-events:none;
+  }
+  .hero-inner{position:relative;z-index:1}
+  .hero .eyebrow{margin-bottom:22px}
+  .hero h1{
+    font-family:'Frank Ruhl Libre',serif;
+    font-weight:900;
+    font-size:clamp(2.4rem,6vw,4rem);
+    line-height:1.04;
+    letter-spacing:-.01em;
+    color:var(--ink);
+    margin-bottom:8px;
+  }
+  .hero h1 .thin{font-weight:500;color:var(--bronze-deep)}
+  .hero-sub{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.8rem;
+    letter-spacing:.12em;
+    color:var(--stone);
+    margin-bottom:28px;
+  }
+  .hero p{
+    max-width:52ch;
+    color:var(--stone);
+    font-size:1.05rem;
+  }
+  .hero p + p{margin-top:14px}
+
+  /* corner registration ticks */
+  .ticks span{position:absolute;width:11px;height:11px;z-index:2}
+  .ticks span::before,.ticks span::after{content:"";position:absolute;background:var(--bronze)}
+  .ticks span::before{width:100%;height:1.5px;top:0}
+  .ticks span::after{height:100%;width:1.5px;top:0}
+  .t-tl{top:10px;left:10px}
+  .t-tr{top:10px;right:10px;transform:scaleX(-1)}
+  .t-bl{bottom:10px;left:10px;transform:scaleY(-1)}
+  .t-br{bottom:10px;right:10px;transform:scale(-1)}
+
+  /* ============ INSTRUCTIONS STRIP ============ */
+  .howto{
+    border:1.5px solid var(--ink);
+    border-top:none;
+    background:var(--slate);
+    color:#EDEAE1;
+    padding:18px 44px;
+    display:flex;
+    gap:26px;
+    flex-wrap:wrap;
+    align-items:center;
+    font-size:.9rem;
+  }
+  .howto .k{font-family:'IBM Plex Mono',monospace;color:var(--bronze);font-size:.72rem;letter-spacing:.12em}
+
+  /* ============ SECTION ============ */
+  section.q{
+    border:1.5px solid var(--ink);
+    border-top:none;
+    background:var(--paper-2);
+    padding:38px 44px 42px;
+    position:relative;
+  }
+  .sec-head{
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:30px;
+  }
+  .sec-num{
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:500;
+    font-size:1.05rem;
+    color:var(--bronze-deep);
+    flex:none;
+  }
+  .sec-title{
+    font-family:'Frank Ruhl Libre',serif;
+    font-weight:700;
+    font-size:1.5rem;
+    color:var(--ink);
+    line-height:1.15;
+  }
+  .sec-desc{
+    color:var(--stone-2);
+    font-size:.86rem;
+    margin-inline-start:auto;
+    max-width:26ch;
+    text-align:start;
+  }
+
+  /* ---- field ---- */
+  .field{margin-bottom:26px}
+  .field:last-child{margin-bottom:0}
+  .field > label,.q-label{
+    display:block;
+    font-weight:600;
+    font-size:1rem;
+    color:var(--ink);
+    margin-bottom:10px;
+  }
+  .q-label .idx{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    color:var(--bronze);
+    margin-inline-end:8px;
+  }
+  .hint{color:var(--stone-2);font-weight:400;font-size:.85rem}
+
+  input[type="text"],input[type="email"],input[type="tel"],input[type="url"],textarea{
+    width:100%;
+    font-family:'Assistant',sans-serif;
+    font-size:1rem;
+    color:var(--ink);
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:0;
+    padding:12px 14px;
+    transition:border-color .18s,background .18s;
+  }
+  textarea{resize:vertical;min-height:92px;line-height:1.55}
+  input:focus,textarea:focus{
+    outline:none;
+    border-color:var(--bronze);
+    background:var(--paper-2);
+    box-shadow:inset 0 0 0 1px var(--bronze);
+  }
+  input::placeholder,textarea::placeholder{color:var(--stone-2);opacity:.7}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+  /* ---- choice options ---- */
+  .opts{display:flex;flex-direction:column;gap:9px}
+  .opts.cols{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .opt{
+    display:flex;
+    align-items:flex-start;
+    gap:11px;
+    padding:12px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    cursor:pointer;
+    transition:border-color .16s,background .16s;
+    font-size:.97rem;
+  }
+  .opt:hover{border-color:var(--bronze);background:var(--paper-2)}
+  .opt input{
+    appearance:none;-webkit-appearance:none;
+    flex:none;
+    width:18px;height:18px;
+    margin-top:3px;
+    border:1.5px solid var(--stone-2);
+    background:transparent;
+    cursor:pointer;
+    position:relative;
+    transition:border-color .16s;
+  }
+  .opt input[type="radio"]{border-radius:50%}
+  .opt input:checked{border-color:var(--bronze-deep)}
+  .opt input[type="radio"]:checked::after{
+    content:"";position:absolute;inset:3px;border-radius:50%;background:var(--bronze-deep);
+  }
+  .opt input[type="checkbox"]:checked::after{
+    content:"";position:absolute;inset:2px;
+    background:var(--bronze-deep);
+  }
+  .opt input:checked + span{font-weight:600}
+  .opt:has(input:checked){border-color:var(--bronze);background:#F3EEE4}
+  .opt input:focus-visible{outline:2px solid var(--bronze);outline-offset:2px}
+
+  /* ============ SUBMIT ============ */
+  .finish{
+    border:1.5px solid var(--ink);
+    border-top:none;
+    background:var(--slate);
+    color:#EDEAE1;
+    padding:44px;
+    text-align:center;
+  }
+  .finish h2{
+    font-family:'Frank Ruhl Libre',serif;
+    font-weight:700;
+    font-size:1.8rem;
+    margin-bottom:8px;
+    color:#fff;
+  }
+  .finish p{color:#C7C2B6;max-width:46ch;margin:0 auto 26px;font-size:.98rem}
+  .btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.82rem;
+    letter-spacing:.08em;
+    padding:14px 30px;
+    border:1.5px solid var(--bronze);
+    cursor:pointer;
+    transition:background .18s,color .18s,transform .1s;
+    background:var(--bronze);
+    color:#231d14;
+    font-weight:500;
+  }
+  .btn:hover{background:#B08D5B;border-color:#B08D5B}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--bronze)}
+  .btn.ghost:hover{background:rgba(154,123,79,.14);color:#D3B683}
+  .btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+
+  .toast{
+    margin-top:18px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.8rem;
+    color:var(--bronze);
+    min-height:20px;
+    letter-spacing:.04em;
+  }
+
+  footer{
+    text-align:center;
+    margin-top:26px;
+    color:var(--stone-2);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;
+    letter-spacing:.14em;
+  }
+
+  @media (max-width:640px){
+    body{padding:0 12px 60px}
+    .titleblock{grid-template-columns:1fr 1fr}
+    .tb-cell.span{grid-column:1/-1;border-inline-start:none;border-top:1px solid var(--line)}
+    .hero,.howto,section.q,.finish{padding-inline:22px}
+    .hero{padding-top:48px}
+    .grid2,.opts.cols{grid-template-columns:1fr}
+    .sec-head{flex-wrap:wrap}
+    .sec-desc{margin-inline-start:0;flex-basis:100%}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="form">
+
+  <!-- TITLE BLOCK -->
+  <div class="titleblock">
+    <div class="tb-cell">
+      <span class="tb-k">מסמך</span>
+      <span class="tb-v">שאלון אפיון אתר</span>
+    </div>
+    <div class="tb-cell">
+      <span class="tb-k">מהדורה</span>
+      <span class="tb-v mono">01 · 2026</span>
+    </div>
+    <div class="tb-cell span">
+      <span class="tb-k">תאריך מילוי</span>
+      <input type="text" data-q="תאריך מילוי" placeholder="__ / __ / ____" style="border:none;background:transparent;padding:0;font-weight:600;font-family:'IBM Plex Mono',monospace">
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="ticks"><span class="t-tl"></span><span class="t-tr"></span><span class="t-bl"></span><span class="t-br"></span></div>
+    <div class="hero-inner">
+      <div class="eyebrow">אפיון · בנייה ושיפוצים · ווילות</div>
+      <h1>בונים את<br><span class="thin">התדמית הדיגיטלית</span></h1>
+      <div class="hero-sub">— טרם שרטוט המסך, מגדירים את המפרט —</div>
+      <p>המסמך הזה הוא נקודת ההתחלה של האתר שלכם. ככל שהתשובות מדויקות ומפורטות יותר, כך האתר ישקף נאמנה את הזהות, האיכות ורמת הגימור שאתם מביאים לכל פרויקט.</p>
+      <p>מלאו את הסעיפים לפי הסדר. אין תשובות נכונות או שגויות — יש רק את הסיפור שלכם. בסיום, לחצו על הכפתור בתחתית כדי להפיק סיכום מסודר ולשלוח אליי.</p>
+    </div>
+  </div>
+
+  <!-- HOWTO -->
+  <div class="howto">
+    <span><span class="k">◐ בחירה יחידה</span> — סמנו אפשרות אחת</span>
+    <span><span class="k">▤ בחירה מרובה</span> — סמנו כמה שרלוונטי</span>
+    <span><span class="k">✎ טקסט חופשי</span> — כתבו בחופשיות</span>
+  </div>
+
+  <!-- ================= §01 ================= -->
+  <section class="q">
+    <div class="sec-head">
+      <div class="sec-num">§ 01</div>
+      <div class="sec-title">פרטי החברה ואיש קשר</div>
+      <div class="sec-desc">הבסיס — כדי שנדע עם מי ועל מה אנחנו עובדים.</div>
+    </div>
+
+    <div class="grid2">
+      <div class="field"><label>שם החברה</label><input type="text" data-q="שם החברה" placeholder="לדוגמה: אבן דרך בנייה בע״מ"></div>
+      <div class="field"><label>איש קשר לפרויקט</label><input type="text" data-q="איש קשר" placeholder="שם מלא + תפקיד"></div>
+      <div class="field"><label>טלפון</label><input type="tel" data-q="טלפון" placeholder="050-0000000"></div>
+      <div class="field"><label>אימייל</label><input type="email" data-q="אימייל" placeholder="name@company.co.il"></div>
+    </div>
+    <div class="field"><label>אתר / עמוד קיים <span class="hint">(אם יש)</span></label><input type="url" data-q="אתר קיים" placeholder="קישור לאתר, לאינסטגרם או לעמוד פייסבוק"></div>
+    <div class="field"><label>אזורי פעילות עיקריים</label><input type="text" data-q="אזורי פעילות" placeholder="לדוגמה: השרון, מרכז, שפלה"></div>
+  </section>
+
+  <!-- ================= §02 ================= -->
+  <section class="q">
+    <div class="sec-head">
+      <div class="sec-num">§ 02</div>
+      <div class="sec-title">זהות ומיצוב</div>
+      <div class="sec-desc">מה גורם ללקוח לבחור דווקא בכם.</div>
+    </div>
+
+    <div class="field">
+      <span class="q-label"><span class="idx">2.1 ◐</span>כמה שנים החברה פועלת?</span>
+      <div class="opts cols" data-single="ותק">
+        <label class="opt"><input type="radio" name="q_vetek"><span>עד 5 שנים</span></label>
+        <label class="opt"><input type="radio" name="q_vetek"><span>5–15 שנים</span></label>
+        <label class="opt"><input type="radio" name="q_vetek"><span>15–30 שנים</span></label>
+        <label class="opt"><input type="radio" name="q_vetek"><span>מעל 30 שנה</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="q-label"><span class="idx">2.2 ✎</span>במשפט אחד — מה החברה עושה?</span>
+      <textarea data-q="תיאור החברה" placeholder="לדוגמה: מתכננים ובונים ווילות יוקרה בהתאמה אישית, מהקרקע ועד המפתח."></textarea>
+    </div>
+
+    <div class="field">
+      <span class="q-label"><span class="idx">2.3 ✎</span>מה מבדל אתכם מהמתחרים?</span>
+      <textarea data-q="בידול" placeholder="ניסיון, איכות גימור, עמידה בזמנים, ליווי אישי, חומרים, אדריכלות ייחודית..."></textarea>
+    </div>
+
+    <div class="field">
+      <span class="q-label"><span class="idx">2.4 ✎</span>סלוגן או משפט מפתח <span class="hint">(אם יש, או רעיון)</span></span>
+      <input type="text" data-q="סלוגן" placeholder="לדוגמה: הבית שתמיד דמיינתם, בנוי לדור">
+    </div>
+  </section>
+
+  <!-- ================= §03 ================= -->
+  <section class="q">
+    <div class="sec-head">
+      <div class="sec-num">§ 03</div>
+      <div class="sec-title">קהל היעד</div>
+      <div class="sec-desc">למי מדבר האתר — משפיע על שפה, סגנון ותמונות.</div>
+    </div>
+    <div class="field">
+      <span class="q-label"><span class="idx">3.1 ▤</span>למי אתם פונים בעיקר?</span>
+      <div class="opts cols" data-multi="קהל יעד">
+        <label class="opt"><input type="checkbox"><span>בעלי קרקע פרטית</span></label>
+        <label class="opt"><input type="checkbox"><span>לקוחות פרימיום / יוקרה</span></label>
+        <label class="opt"><input type="checkbox"><span>זוגות שבונים בית ראשון</span></label>
+        <label class="opt"><input type="checkbox"><span>משפרי דיור</span></label>
+        <label class="opt"><input type="checkbox"><span>יזמים / קבלנים</span></label>
+        <label class="opt"><input type="checkbox"><span>לקוחות לשיפוץ בלבד</span></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= §04 ================= -->
+  <section class="q">
+    <div class="sec-head">
+      <div class="sec-num">§ 04</div>
+      <div class="sec-title">השירותים שלכם</div>
+      <div class="sec-desc">אלה יהפכו לעמודים ולתפריט של האתר.</div>
+    </div>
+    <div class="field">
+      <span class="q-label"><span class="idx">4.1 ▤</span>אילו שירותים להציג?</span>
+      <div class="opts cols" data-multi="שירותים">
+        <label class="opt"><input type="checkbox"><span>בנייה פרטית מהיסוד</span></label>
+        <label class="opt"><input type="checkbox"><span>בניית ווילות יוקרה</span></label>
+        <label class="opt"><input type="checkbox"><span>שיפוצים כלליים</span></label>
+        <label class="opt"><input type="checkbox"><span>תוספות בנייה / הרחבות</span></label>
+        <label class="opt"><input type="checkbox"><span>עיצוב ותכנון פנים</span></label>
+        <label class="opt"><input type="checkbox"><span>ניהול ופיקוח פרויקטים</span></label>
+        <label class="opt"><input type="checkbox"><span>תכנון אדריכלי</span></label>
+        <label class="opt"><input type="checkbox"><span>עבודות גמר ואומן</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <span class="q-label"><span class="idx">4.2 ✎</span>שירות נוסף שלא מופיע למעלה?</span>
+      <input type="text" data-q="שירות נוסף" placeholder="כתבו כאן">
+    </div>
+  </section>
+
+  <!-- ================= §05 ================= -->
+  <section class="q">
+    <div class="sec-head">
+      <div class="sec-num">§ 05</div>
+      <div class="sec-title">חומרים קיימים</div>
+      <div class="sec-desc">מה כבר יש ביד — לוגו, תמונות, פרויקטים, המלצות.</div>
+    </div>
+
+    <div class="field">
+      <span class="q-label"><span class="idx">5.1 ◐</span>יש לוגו קיים?</span>
+      <div class="opts cols" data-single="לוגו">
+        <label class="opt"><input type="radio" name="q_logo"><span>כן, בקבצים מוכנים</span></label>
+        <label class="opt"><input type="radio" name="q_logo"><span>יש, אבל צריך רענון</span></label>
+        <label class="opt"><input type="radio" name="q_logo"><span>אין — צריך לעצב</span></label>
+        <label class="opt"><input type="radio" name="q_logo"><span>עוד לא בטוח</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="q-label"><span class="idx">5.2 ◐</span>תמונות של פרויקטים</span>
+      <div class="opts" data-single="תמונות">
+        <label class="opt"><input type="radio" name="q_photos"><span>יש צילומים מקצועיים באיכות גבוהה</span></label>
+        <label class="opt"><input type="radio" name="q_photos"><span>יש תמונות מהשטח / מהטלפון</span></label>
+        <label class="opt"><input type="radio" name="q_photos"><span>מעט מאוד או אין — נצטרך פתרון</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="q-label"><span class="idx">5.3 ▤</span>מה יש להצגה בגלריה?</span>
+      <div class="opts cols" data-multi="תוכן לגלריה">
+        <label class="opt"><input type="checkbox"><span>ווילות שהושלמו</span></label>
+        <label class="opt"><input type="checkbox"><span>תמונות "לפני / אחרי"</span></label>
+        <label class="opt"><input type="checkbox"><span>שלבי בנייה בתהליך</span></label>
+        <label class="opt"><input type="checkbox"><span>המלצות / חוות דעת לקוחות</span></label>
+        <label class="opt"><input type="checkbox"><span>פרסים, תקנים או הסמכות</span></label>
+        <label class="opt"><input type="checkbox"><span>סרטוני וידאו</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="q-label"><span class="idx">5.4 ✎</span>כמה פרויקטים בערך תרצו להציג?</span>
+      <input type="text" data-q="מספר פרויקטים" placeholder="לדוגמה: 6–8 פרויקטים נבחרים">
+    </div>
+  </section>
+
+  <!-- ================= §06 ================= -->
+  <section class="q">
+    <div class="sec-head">
+      <div class="sec-num">§ 06</div>
+      <div class="sec-title">כיוון עיצובי</div>
+      <div class="sec-desc">הרושם הראשוני שהאתר צריך לשדר.</div>
+    </div>
+    <div class="field">
+      <span class="q-label"><span class="idx">6.1 ◐</span>איזה סגנון הכי מדבר אליכם?</span>
+      <div class="opts" data-single="סגנון עיצובי">
+        <label class="opt"><input type="radio" name="q_style"><span><strong>מודרני ומינימליסטי</strong> — קווים נקיים, הרבה חלל לבן, אלגנטיות שקטה</span></label>
+        <label class="opt"><input type="radio" name="q_style"><span><strong>יוקרתי וקלאסי</strong> — תחושת פרימיום, ניגודיות עשירה, כבוד</span></label>
+        <label class="opt"><input type="radio" name="q_style"><span><strong>חם וטבעי</strong> — עץ, אבן, אדמה, גוונים רכים ואנושיים</span></label>
+        <label class="opt"><input type="radio" name="q_style"><span><strong>ארכיטקטוני ומדויק</strong> — קווי מתאר, גריד, תחושת שרטוט</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <span class="q-label"><span class="idx">6.2 ✎</span>אתרים שאהבתם <span class="hint">(של מתחרים או מכל תחום)</span></span>
+      <textarea data-q="אתרי השראה" placeholder="הדביקו קישורים וכתבו מה אהבתם בכל אחד — האווירה, הצבעים, המבנה..."></textarea>
+    </div>
+  </section>
+
+  <!-- ================= §07 ================= -->
+  <section class="q">
+    <div class="sec-head">
+      <div class="sec-num">§ 07</div>
+      <div class="sec-title">צבעים ואווירה</div>
+      <div class="sec-desc">הרגש שהאתר משאיר אצל המבקר.</div>
+    </div>
+    <div class="field">
+      <span class="q-label"><span class="idx">7.1 ▤</span>אילו מילים מתארות את התחושה הרצויה?</span>
+      <div class="opts cols" data-multi="מילות אווירה">
+        <label class="opt"><input type="checkbox"><span>יוקרתי</span></label>
+        <label class="opt"><input type="checkbox"><span>אמין ויציב</span></label>
+        <label class="opt"><input type="checkbox"><span>חם ומזמין</span></label>
+        <label class="opt"><input type="checkbox"><span>מקצועי ומדויק</span></label>
+        <label class="opt"><input type="checkbox"><span>נקי ומודרני</span></label>
+        <label class="opt"><input type="checkbox"><span>יוקרתי אך נגיש</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <span class="q-label"><span class="idx">7.2 ✎</span>צבעים מועדפים או כאלה שלהימנע מהם</span>
+      <input type="text" data-q="העדפות צבע" placeholder="לדוגמה: גווני אבן ובז׳, מבטא זהב/ברונזה. להימנע מכחול עז.">
+    </div>
+  </section>
+
+  <!-- ================= §08 ================= -->
+  <section class="q">
+    <div class="sec-head">
+      <div class="sec-num">§ 08</div>
+      <div class="sec-title">מבנה ותכולת האתר</div>
+      <div class="sec-desc">אילו עמודים ומקטעים יהיו באתר.</div>
+    </div>
+    <div class="field">
+      <span class="q-label"><span class="idx">8.1 ▤</span>אילו עמודים / מקטעים דרושים?</span>
+      <div class="opts cols" data-multi="מבנה האתר">
+        <label class="opt"><input type="checkbox"><span>עמוד בית</span></label>
+        <label class="opt"><input type="checkbox"><span>אודות / הסיפור שלנו</span></label>
+        <label class="opt"><input type="checkbox"><span>שירותים</span></label>
+        <label class="opt"><input type="checkbox"><span>גלריית פרויקטים</span></label>
+        <label class="opt"><input type="checkbox"><span>תהליך העבודה (שלב-שלב)</span></label>
+        <label class="opt"><input type="checkbox"><span>המלצות לקוחות</span></label>
+        <label class="opt"><input type="checkbox"><span>שאלות ותשובות</span></label>
+        <label class="opt"><input type="checkbox"><span>בלוג / מאמרים</span></label>
+        <label class="opt"><input type="checkbox"><span>צור קשר</span></label>
+        <label class="opt"><input type="checkbox"><span>עמוד ריכוז לידים</span></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= §09 ================= -->
+  <section class="q">
+    <div class="sec-head">
+      <div class="sec-num">§ 09</div>
+      <div class="sec-title">הפעולה המבוקשת</div>
+      <div class="sec-desc">מה הכי חשוב שהמבקר יעשה באתר.</div>
+    </div>
+    <div class="field">
+      <span class="q-label"><span class="idx">9.1 ◐</span>הפעולה המרכזית</span>
+      <div class="opts cols" data-single="פעולה מרכזית">
+        <label class="opt"><input type="radio" name="q_cta"><span>בקשת הצעת מחיר</span></label>
+        <label class="opt"><input type="radio" name="q_cta"><span>יצירת קשר טלפוני</span></label>
+        <label class="opt"><input type="radio" name="q_cta"><span>קביעת פגישת ייעוץ</span></label>
+        <label class="opt"><input type="radio" name="q_cta"><span>השארת פרטים בטופס</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <span class="q-label"><span class="idx">9.2 ▤</span>ערוצי קשר להצגה</span>
+      <div class="opts cols" data-multi="ערוצי קשר">
+        <label class="opt"><input type="checkbox"><span>טלפון</span></label>
+        <label class="opt"><input type="checkbox"><span>וואטסאפ</span></label>
+        <label class="opt"><input type="checkbox"><span>טופס יצירת קשר</span></label>
+        <label class="opt"><input type="checkbox"><span>אימייל</span></label>
+        <label class="opt"><input type="checkbox"><span>קישור לרשתות חברתיות</span></label>
+        <label class="opt"><input type="checkbox"><span>ווייז / כתובת משרד</span></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= §10 ================= -->
+  <section class="q">
+    <div class="sec-head">
+      <div class="sec-num">§ 10</div>
+      <div class="sec-title">שפות ונגישות</div>
+      <div class="sec-desc">קהל ודרישות רגולציה.</div>
+    </div>
+    <div class="field">
+      <span class="q-label"><span class="idx">10.1 ▤</span>באילו שפות יעלה האתר?</span>
+      <div class="opts cols" data-multi="שפות">
+        <label class="opt"><input type="checkbox"><span>עברית</span></label>
+        <label class="opt"><input type="checkbox"><span>אנגלית</span></label>
+        <label class="opt"><input type="checkbox"><span>ערבית</span></label>
+        <label class="opt"><input type="checkbox"><span>רוסית</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <span class="q-label"><span class="idx">10.2 ◐</span>הצהרת נגישות (תקן ישראלי)</span>
+      <div class="opts cols" data-single="נגישות">
+        <label class="opt"><input type="radio" name="q_a11y"><span>כן, חובה</span></label>
+        <label class="opt"><input type="radio" name="q_a11y"><span>לא בטוח — צריך ייעוץ</span></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= §11 ================= -->
+  <section class="q">
+    <div class="sec-head">
+      <div class="sec-num">§ 11</div>
+      <div class="sec-title">היבטים טכניים ותקציב</div>
+      <div class="sec-desc">כדי לתכנן לוחות זמנים והיקף.</div>
+    </div>
+
+    <div class="field">
+      <span class="q-label"><span class="idx">11.1 ◐</span>דומיין (כתובת אתר)</span>
+      <div class="opts" data-single="דומיין">
+        <label class="opt"><input type="radio" name="q_domain"><span>יש דומיין קיים</span></label>
+        <label class="opt"><input type="radio" name="q_domain"><span>צריך לרכוש דומיין חדש</span></label>
+        <label class="opt"><input type="radio" name="q_domain"><span>לא יודע</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="q-label"><span class="idx">11.2 ◐</span>מי יספק את הטקסטים?</span>
+      <div class="opts" data-single="תכני טקסט">
+        <label class="opt"><input type="radio" name="q_copy"><span>נספק בעצמנו</span></label>
+        <label class="opt"><input type="radio" name="q_copy"><span>נשמח לעזרה בכתיבה</span></label>
+        <label class="opt"><input type="radio" name="q_copy"><span>שילוב — חומר גלם מאיתנו, ניסוח מכם</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="q-label"><span class="idx">11.3 ◐</span>לוח זמנים רצוי</span>
+      <div class="opts cols" data-single="לוח זמנים">
+        <label class="opt"><input type="radio" name="q_time"><span>דחוף (עד חודש)</span></label>
+        <label class="opt"><input type="radio" name="q_time"><span>1–2 חודשים</span></label>
+        <label class="opt"><input type="radio" name="q_time"><span>2–3 חודשים</span></label>
+        <label class="opt"><input type="radio" name="q_time"><span>גמיש</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="q-label"><span class="idx">11.4 ◐</span>טווח תקציב <span class="hint">(עוזר להתאים היקף — נשאר בינינו)</span></span>
+      <div class="opts cols" data-single="תקציב">
+        <label class="opt"><input type="radio" name="q_budget"><span>בסיסי</span></label>
+        <label class="opt"><input type="radio" name="q_budget"><span>בינוני</span></label>
+        <label class="opt"><input type="radio" name="q_budget"><span>מורחב / פרימיום</span></label>
+        <label class="opt"><input type="radio" name="q_budget"><span>נעדיף לדבר על זה</span></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= §12 ================= -->
+  <section class="q">
+    <div class="sec-head">
+      <div class="sec-num">§ 12</div>
+      <div class="sec-title">שדה חופשי</div>
+      <div class="sec-desc">כל דבר שחשוב שנדע ולא נשאל.</div>
+    </div>
+    <div class="field">
+      <span class="q-label"><span class="idx">12.1 ✎</span>הערות, חלומות, חששות, דוגמאות</span>
+      <textarea data-q="הערות חופשיות" placeholder="ספרו לנו כל מה שעל הלב — אין הגבלה." style="min-height:130px"></textarea>
+    </div>
+  </section>
+
+  <!-- FINISH -->
+  <div class="finish">
+    <h2>סיימתם? מפיקים מפרט</h2>
+    <p>הפקת סיכום מסודר של כל התשובות — הורידו כקובץ או העתיקו ושלחו אליי, ונתחיל לבנות.</p>
+    <div class="btns">
+      <button class="btn" id="downloadBtn">⇩ הורדת המפרט</button>
+      <button class="btn ghost" id="copyBtn">⧉ העתקת הסיכום</button>
+    </div>
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <footer>מפרט אפיון · שאלון לקוח · גרסה 01</footer>
+</div>
+
+<script>
+(function(){
+  function collect(){
+    var out=[];
+    out.push("════════════════════════════════════════");
+    out.push("   שאלון אפיון אתר · חברת בנייה ושיפוצים");
+    out.push("════════════════════════════════════════\n");
+
+    document.querySelectorAll('section.q, .titleblock').forEach(function(sec){
+      var titleEl=sec.querySelector('.sec-title');
+      var numEl=sec.querySelector('.sec-num');
+      if(titleEl){
+        out.push("\n"+(numEl?numEl.textContent.trim()+"  ":"")+titleEl.textContent.trim());
+        out.push("────────────────────────────");
+      }
+
+      // free-text inputs / textareas with data-q
+      sec.querySelectorAll('[data-q]').forEach(function(el){
+        var v=(el.value||"").trim();
+        out.push("• "+el.getAttribute('data-q')+": "+(v||"—"));
+      });
+
+      // single-select groups
+      sec.querySelectorAll('[data-single]').forEach(function(grp){
+        var chosen=grp.querySelector('input:checked');
+        var label=chosen?chosen.closest('.opt').innerText.trim():"—";
+        out.push("• "+grp.getAttribute('data-single')+": "+label);
+      });
+
+      // multi-select groups
+      sec.querySelectorAll('[data-multi]').forEach(function(grp){
+        var vals=[];
+        grp.querySelectorAll('input:checked').forEach(function(c){
+          vals.push(c.closest('.opt').innerText.trim());
+        });
+        out.push("• "+grp.getAttribute('data-multi')+": "+(vals.length?vals.join(" | "):"—"));
+      });
+    });
+
+    out.push("\n════════════════════════════════════════");
+    out.push("הופק בתאריך: "+new Date().toLocaleDateString('he-IL'));
+    return out.join("\n");
+  }
+
+  function flash(msg){
+    var t=document.getElementById('toast');
+    t.textContent=msg;
+    clearTimeout(t._t);
+    t._t=setTimeout(function(){t.textContent="";},3500);
+  }
+
+  document.getElementById('downloadBtn').addEventListener('click',function(){
+    var text=collect();
+    var blob=new Blob([text],{type:'text/plain;charset=utf-8'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url; a.download="שאלון-אפיון-אתר.txt";
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+    flash("✓ הקובץ הורד — שלחו אותו אליי");
+  });
+
+  document.getElementById('copyBtn').addEventListener('click',function(){
+    var text=collect();
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){
+        flash("✓ הסיכום הועתק ללוח");
+      }).catch(function(){ fallback(text); });
+    } else { fallback(text); }
+  });
+
+  function fallback(text){
+    var ta=document.createElement('textarea');
+    ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{document.execCommand('copy');flash("✓ הסיכום הועתק ללוח");}
+    catch(e){flash("לא הצליח להעתיק — נסו הורדה");}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+</body>
+</html>
